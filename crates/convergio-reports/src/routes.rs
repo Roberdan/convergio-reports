@@ -15,6 +15,7 @@ use axum::Router;
 use convergio_db::pool::ConnPool;
 use serde::Deserialize;
 use serde_json::{json, Value};
+use tracing;
 use uuid::Uuid;
 
 use crate::types::{ReportRequest, ReportStatus};
@@ -258,7 +259,18 @@ async fn handle_download(
     }
 
     let path = match pdf_path {
-        Some(p) if std::path::Path::new(&p).exists() => p,
+        Some(p) if std::path::Path::new(&p).exists() => {
+            // Prevent path traversal — only allow files under the expected report dir
+            let canonical = match std::fs::canonicalize(&p) {
+                Ok(c) => c,
+                Err(_) => return err_response(StatusCode::NOT_FOUND, "PDF file not available"),
+            };
+            if !canonical.starts_with("/tmp/ctt-reports") {
+                tracing::warn!(path = %p, "blocked PDF download outside allowed directory");
+                return err_response(StatusCode::FORBIDDEN, "invalid PDF path");
+            }
+            p
+        }
         _ => return err_response(StatusCode::NOT_FOUND, "PDF file not available"),
     };
 

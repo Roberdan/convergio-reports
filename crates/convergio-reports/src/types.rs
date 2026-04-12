@@ -90,11 +90,15 @@ pub enum ReportStatus {
 
 impl std::fmt::Display for ReportStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = serde_json::to_value(self)
-            .ok()
-            .and_then(|v| v.as_str().map(String::from))
-            .unwrap_or_default();
-        f.write_str(&s)
+        let s = match self {
+            Self::Pending => "pending",
+            Self::Researching => "researching",
+            Self::Generating => "generating",
+            Self::Compiling => "compiling",
+            Self::Completed => "completed",
+            Self::Failed => "failed",
+        };
+        f.write_str(s)
     }
 }
 
@@ -179,5 +183,20 @@ mod tests {
     fn report_type_labels_not_empty() {
         assert!(!ReportType::General.label().is_empty());
         assert!(!ReportType::CompanyDeepDive.label().is_empty());
+    }
+
+    #[test]
+    fn report_status_display_matches_serde() {
+        let statuses = vec![
+            (ReportStatus::Pending, "pending"),
+            (ReportStatus::Researching, "researching"),
+            (ReportStatus::Generating, "generating"),
+            (ReportStatus::Compiling, "compiling"),
+            (ReportStatus::Completed, "completed"),
+            (ReportStatus::Failed, "failed"),
+        ];
+        for (status, expected) in &statuses {
+            assert_eq!(status.to_string(), *expected);
+        }
     }
 }
