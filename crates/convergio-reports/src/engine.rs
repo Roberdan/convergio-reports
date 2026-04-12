@@ -48,8 +48,6 @@ pub async fn generate(pool: &ConnPool, report_id: &str) {
     // Phase 3: PDF compilation (if requested)
     let pdf_path = if row.format_str == "pdf" {
         update_status(pool, report_id, ReportStatus::Compiling);
-        let report_type: ReportType =
-            serde_json::from_value(json!(row.report_type_str)).unwrap_or(ReportType::General);
         let latex_content =
             crate::latex::markdown_to_latex(&content, &row.topic, report_type, &date);
         let slug = crate::latex::topic_slug(&row.topic);

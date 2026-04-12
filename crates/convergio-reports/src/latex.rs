@@ -132,17 +132,27 @@ fn convert_md_line(line: &str) -> String {
 }
 
 /// Escape special LaTeX characters.
+///
+/// Uses single-pass replacement to avoid double-escaping (e.g. `\` →
+/// `\textbackslash{}` must not have its braces re-escaped).
 fn latex_escape(text: &str) -> String {
-    text.replace('\\', r"\textbackslash{}")
-        .replace('&', r"\&")
-        .replace('%', r"\%")
-        .replace('$', r"\$")
-        .replace('#', r"\#")
-        .replace('_', r"\_")
-        .replace('{', r"\{")
-        .replace('}', r"\}")
-        .replace('~', r"\textasciitilde{}")
-        .replace('^', r"\textasciicircum{}")
+    let mut out = String::with_capacity(text.len() + text.len() / 4);
+    for ch in text.chars() {
+        match ch {
+            '\\' => out.push_str(r"\textbackslash{}"),
+            '&' => out.push_str(r"\&"),
+            '%' => out.push_str(r"\%"),
+            '$' => out.push_str(r"\$"),
+            '#' => out.push_str(r"\#"),
+            '_' => out.push_str(r"\_"),
+            '{' => out.push_str(r"\{"),
+            '}' => out.push_str(r"\}"),
+            '~' => out.push_str(r"\textasciitilde{}"),
+            '^' => out.push_str(r"\textasciicircum{}"),
+            c => out.push(c),
+        }
+    }
+    out
 }
 
 /// Generate the output filename slug.
@@ -183,6 +193,14 @@ mod tests {
         assert_eq!(latex_escape("a & b"), r"a \& b");
         assert_eq!(latex_escape("100%"), r"100\%");
         assert_eq!(latex_escape("$10"), r"\$10");
+    }
+
+    #[test]
+    fn latex_escape_backslash_no_double_escape() {
+        // Backslash must not have its braces re-escaped
+        let result = latex_escape(r"a\b");
+        assert_eq!(result, r"a\textbackslash{}b");
+        assert!(!result.contains(r"\{"), "braces were double-escaped");
     }
 
     #[test]
