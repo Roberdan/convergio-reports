@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.4](https://github.com/Roberdan/convergio-reports/compare/v0.1.3...v0.1.4) (2026-04-13)
+
+
+### Bug Fixes
+
+* audit improvements — latex escape bug, path traversal guard, perf ([#5](https://github.com/Roberdan/convergio-reports/issues/5)) ([7f55da5](https://github.com/Roberdan/convergio-reports/commit/7f55da5df5aafc057ed519b71f4647a8689f7e35))
+* **release:** use vX.Y.Z tag format (remove component) ([0212679](https://github.com/Roberdan/convergio-reports/commit/0212679f31fc45db1aef9bb5fd08545949f29608))
+
+
+### Documentation
+
+* copy ADR from monorepo ([9e75087](https://github.com/Roberdan/convergio-reports/commit/9e7508745910c4e35ff535e49a613966aacc64aa))
+
 ## [0.1.3](https://github.com/Roberdan/convergio-reports/compare/v0.1.2...v0.1.3) (2026-04-13)
 
 
