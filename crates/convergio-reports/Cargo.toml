@@ -4,6 +4,7 @@ description = "Convergio Think Tank — professional research report generation 
 version = "0.1.5"
 edition.workspace = true
 license.workspace = true
+repository = "https://github.com/Roberdan/convergio-reports"
 
 [dependencies]
 convergio-types = { workspace = true }
