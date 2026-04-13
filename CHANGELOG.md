@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/Roberdan/convergio-reports/compare/v0.1.4...v0.1.5) (2026-04-13)
+
+
+### Bug Fixes
+
+* **deps:** use convergio-db from SDK instead of standalone repo ([d60f00c](https://github.com/Roberdan/convergio-reports/commit/d60f00c0543dd0dadcda369f511a90ed52d06607))
+
 ## [0.1.4](https://github.com/Roberdan/convergio-reports/compare/v0.1.3...v0.1.4) (2026-04-13)
 
 
